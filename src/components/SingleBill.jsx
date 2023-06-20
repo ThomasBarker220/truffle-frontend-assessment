@@ -1,6 +1,10 @@
 import { useDispatch } from "react-redux";
-import { removeBill } from "../features/billboard/billboardSlice";
+import {
+  changeCurrentBill,
+  removeBill,
+} from "../features/billboard/billboardSlice";
 import { CiSquareRemove } from "react-icons/ci";
+import { openModal } from "../features/modal/modalSlice";
 
 const SingleBill = ({ bill }) => {
   const { name, address, hospital, date, amount, image, id } = bill;
@@ -8,7 +12,13 @@ const SingleBill = ({ bill }) => {
 
   return (
     <section className="bill">
-      <button className="remove-btn" onClick={() => dispatch(removeBill(id))}>
+      <button
+        className="remove-btn"
+        onClick={() => {
+          dispatch(changeCurrentBill(id));
+          dispatch(openModal());
+        }}
+      >
         <CiSquareRemove />
         Remove Bill
       </button>

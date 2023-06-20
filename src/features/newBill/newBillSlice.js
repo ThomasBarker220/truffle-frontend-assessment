@@ -24,7 +24,7 @@ const newBillSlice = createSlice({
       state.isReviewing = !state.isReviewing;
     },
     resetBillForm: (state) => {
-      state.id = null;
+      state.id = nanoid();
       state.name = "";
       state.address = "";
       state.hospital = "";

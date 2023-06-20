@@ -1,10 +1,13 @@
-import { nanoid } from "nanoid";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  resetBillForm,
   toggleReviewMode,
   updateBillData,
 } from "../features/newBill/newBillSlice";
+import { Link, useNavigate } from "react-router-dom";
+import { addBill } from "../features/billboard/billboardSlice";
+import { FaAngleLeft } from "react-icons/fa";
 
 // const handleSubmit = (e) => {
 //   e.preventDefault();
@@ -21,8 +24,9 @@ import {
 
 const BillForm = () => {
   const dispatch = useDispatch();
-  const { name, address, hospital, date, amount, image, isReviewing } =
-    useSelector((state) => state.newBill);
+  const newBill = useSelector((state) => state.newBill);
+  const { name, address, hospital, date, amount, image, isReviewing } = newBill;
+  const navigate = useNavigate();
 
   const handleReview = (e) => {
     e.preventDefault();
@@ -34,27 +38,42 @@ const BillForm = () => {
     dispatch(updateBillData({ name, value }));
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(addBill(newBill));
+    dispatch(resetBillForm());
+    navigate("/");
+  };
+
   if (isReviewing) {
+    console.log(newBill);
     return (
       <div>
         <section className="bill">
-          <button className="btn" onClick={handleReview}>
-            Edit Bill
-          </button>
           <h4>{name}</h4>
           <p>{address}</p>
           <p>{hospital}</p>
           <p>{date}</p>
           <p>${amount}</p>
           <img src={image} alt="medical bill" />
+          <button className="btn" onClick={handleReview}>
+            Edit Bill
+          </button>
+          <button onClick={handleSubmit} className="btn">
+            Submit
+          </button>
         </section>
       </div>
     );
   }
 
   return (
-    <div>
+    <div className="container">
       <form className="form" onSubmit={handleReview}>
+        <Link to={"/"} className="btn home-btn">
+          <FaAngleLeft />
+          Back to home page
+        </Link>
         <h4>Upload New Medical Bill</h4>
         {/* name */}
         <div className="form-row">
@@ -146,7 +165,7 @@ const BillForm = () => {
         </div>
 
         <button type="submit" className="btn btn-block">
-          submit
+          Review
         </button>
       </form>
     </div>
