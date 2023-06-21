@@ -10,6 +10,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { addBill } from "../features/billboard/billboardSlice";
 import { FaAngleLeft } from "react-icons/fa";
+import { useForm } from "react-hook-form";
 
 // const handleSubmit = (e) => {
 //   e.preventDefault();
@@ -39,8 +40,16 @@ const BillForm = () => {
   } = newBill;
   const navigate = useNavigate();
 
-  const handleReview = (e) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const handleReview = () => {
+    if (!image) {
+      return;
+    }
     dispatch(toggleReviewMode());
   };
 
@@ -56,7 +65,7 @@ const BillForm = () => {
     dispatch(updateImage(fileUrl));
   };
 
-  const handleSubmit = (e) => {
+  const submitBill = (e) => {
     e.preventDefault();
     dispatch(addBill(newBill));
     dispatch(resetBillForm());
@@ -85,7 +94,7 @@ const BillForm = () => {
           <button className="btn edit-btn" onClick={handleReview}>
             Edit Bill
           </button>
-          <button onClick={handleSubmit} className="btn submit-btn">
+          <button onClick={submitBill} className="btn submit-btn">
             Submit
           </button>
         </section>
@@ -95,7 +104,7 @@ const BillForm = () => {
 
   return (
     <div className="container">
-      <form className="form" onSubmit={handleReview}>
+      <form className="form" onSubmit={handleSubmit(handleReview)}>
         <Link to={"/"} className="btn home-btn">
           <FaAngleLeft />
           Back to home page
@@ -111,9 +120,11 @@ const BillForm = () => {
             className="form-input"
             id="name"
             name="name"
+            {...register("name", { required: "Patient Name is required" })}
             value={name}
             onChange={handleInputChange}
           />
+          {errors.name && <div>{errors.name.message}</div>}
         </div>
         {/* address */}
         <div className="form-row">
@@ -125,9 +136,13 @@ const BillForm = () => {
             className="form-input"
             id="address"
             name="address"
+            {...register("address", {
+              required: "Patient address is required",
+            })}
             value={address}
             onChange={handleInputChange}
           />
+          {errors.address && <div>{errors.address.message}</div>}
         </div>
         {/* hospital */}
 
@@ -140,9 +155,11 @@ const BillForm = () => {
             className="form-input"
             id="hospital"
             name="hospital"
+            {...register("hospital", { required: "Hospital is required" })}
             value={hospital}
             onChange={handleInputChange}
           />
+          {errors.hospital && <div>{errors.hospital.message}</div>}
         </div>
 
         {/* Date */}
@@ -155,9 +172,11 @@ const BillForm = () => {
             className="form-input"
             id="date"
             name="date"
+            {...register("date", { required: "Date is required" })}
             value={date}
             onChange={handleInputChange}
           />
+          {errors.date && <div>{errors.date.message}</div>}
         </div>
 
         {/* Amount */}
@@ -170,9 +189,17 @@ const BillForm = () => {
             className="form-input"
             id="amount"
             name="amount"
+            {...register("amount", {
+              required: "Amount is required",
+              min: {
+                value: 0.01,
+                message: "Bill amount must be greater than 0",
+              },
+            })}
             value={amount}
             onChange={handleInputChange}
           />
+          {errors.amount && <div>{errors.amount.message}</div>}
         </div>
 
         {/* Bill Image */}
@@ -188,7 +215,10 @@ const BillForm = () => {
             title=""
             onChange={handleImageChange}
           />
-          <span>{imageName || "No file chosen"}</span>
+          <span>
+            {imageName || "Please upload an image of your medical bill"}
+          </span>
+          {}
         </div>
 
         <button type="submit" className="btn btn-block">
