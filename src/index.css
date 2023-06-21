@@ -201,10 +201,16 @@ header {
 
 .bill h4 {
   margin-top: 3rem;
+  margin-bottom: 2rem;
+  font-size: 2rem;
 }
 
 .bill svg {
   margin-right: 1rem;
+}
+
+.bill-label {
+  font-weight: 500;
 }
 
 /* Bill Form CSS */
@@ -268,13 +274,42 @@ header {
 
 .home-btn {
   position: absolute;
-  left: 0;
+  display: flex;
+  left: -1rem;
   top: 0;
   margin-left: 2.5rem;
   background-color: transparent;
   color: var(--clr-primary);
   border: transparent;
   box-shadow: none;
+}
+
+.home-btn:hover {
+  color: var(--clr-primary);
+  background: transparent;
+}
+
+.home-btn svg {
+  align-self: center;
+}
+
+input[type="file"] {
+  color: transparent;
+}
+
+/* Review Page CSS */
+
+.edit-btn {
+  margin: 1rem;
+  background-color: var(--clr-primary);
+  font-weight: 200;
+  border-radius: 0.25rem;
+}
+
+.submit-btn {
+  margin: 1rem;
+  font-weight: 200;
+  border-radius: 0.25rem;
 }
 
 /* Modal CSS */
@@ -303,10 +338,13 @@ header {
 .modal h4 {
   margin-bottom: 0;
   line-height: 1.5;
+  font-weight: 500;
 }
 .modal .clear-btn,
 .modal .confirm-btn {
   margin-top: 1rem;
+  font-weight: 200;
+  border-radius: 0.5rem;
 }
 .btn-container {
   display: flex;

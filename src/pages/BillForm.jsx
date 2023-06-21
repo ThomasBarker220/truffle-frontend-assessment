@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   resetBillForm,
   toggleReviewMode,
   updateBillData,
+  updateImage,
+  updateImageName,
 } from "../features/newBill/newBillSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { addBill } from "../features/billboard/billboardSlice";
@@ -25,7 +27,16 @@ import { FaAngleLeft } from "react-icons/fa";
 const BillForm = () => {
   const dispatch = useDispatch();
   const newBill = useSelector((state) => state.newBill);
-  const { name, address, hospital, date, amount, image, isReviewing } = newBill;
+  const {
+    name,
+    address,
+    hospital,
+    date,
+    amount,
+    image,
+    imageName,
+    isReviewing,
+  } = newBill;
   const navigate = useNavigate();
 
   const handleReview = (e) => {
@@ -38,6 +49,13 @@ const BillForm = () => {
     dispatch(updateBillData({ name, value }));
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    dispatch(updateImageName(file.name));
+    const fileUrl = URL.createObjectURL(file);
+    dispatch(updateImage(fileUrl));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(addBill(newBill));
@@ -46,20 +64,28 @@ const BillForm = () => {
   };
 
   if (isReviewing) {
-    console.log(newBill);
     return (
       <div>
         <section className="bill">
           <h4>{name}</h4>
-          <p>{address}</p>
-          <p>{hospital}</p>
-          <p>{date}</p>
-          <p>${amount}</p>
+          <p>
+            <span className="bill-label">Patient address: </span> {address}
+          </p>
+          <p>
+            <span className="bill-label">Hospital: </span> {hospital}
+          </p>
+          <p>
+            <span className="bill-label">Date: </span>
+            {date}
+          </p>
+          <p>
+            <span className="bill-label">Bill amount: </span> ${amount}
+          </p>
           <img src={image} alt="medical bill" />
-          <button className="btn" onClick={handleReview}>
+          <button className="btn edit-btn" onClick={handleReview}>
             Edit Bill
           </button>
-          <button onClick={handleSubmit} className="btn">
+          <button onClick={handleSubmit} className="btn submit-btn">
             Submit
           </button>
         </section>
@@ -155,13 +181,14 @@ const BillForm = () => {
             Bill Image
           </label>
           <input
-            type="text"
+            type="file"
             className="form-input"
             id="image"
             name="image"
-            value={image}
-            onChange={handleInputChange}
+            title=""
+            onChange={handleImageChange}
           />
+          <span>{imageName || "No file chosen"}</span>
         </div>
 
         <button type="submit" className="btn btn-block">

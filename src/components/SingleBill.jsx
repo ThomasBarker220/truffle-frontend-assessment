@@ -23,10 +23,19 @@ const SingleBill = ({ bill }) => {
         Remove Bill
       </button>
       <h4>{name}</h4>
-      <p>{address}</p>
-      <p>{hospital}</p>
-      <p>{date}</p>
-      <p>${amount}</p>
+      <p>
+        <span className="bill-label">Patient address: </span> {address}
+      </p>
+      <p>
+        <span className="bill-label">Hospital: </span> {hospital}
+      </p>
+      <p>
+        <span className="bill-label">Date: </span>
+        {date}
+      </p>
+      <p>
+        <span className="bill-label">Bill amount: </span> ${amount}
+      </p>
       <img src={image} alt="medical bill" />
     </section>
   );
